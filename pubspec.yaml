@@ -1,0 +1,42 @@
+name: welink_app
+description: "WeLink Loyalty Platform App - GEMASTIK 2026"
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0" # Mengikuti standar SDK Flutter baru lo
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  geolocator: ^13.0.0 # Gunakan versi terbaru yang kompatibel dengan Flutter-mu
+  geocoding: ^3.0.0
+
+  # State Management & Routing
+  flutter_bloc: ^8.1.3
+  go_router: ^14.2.0
+
+  # Fitur QR & Device Utility
+  qr_flutter: ^4.1.0
+  screen_brightness: ^1.0.1
+
+  # HTTP Client buat connect ke NestJS Rafif
+  dio: ^5.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  # Nanti kalau sudah ada gambar/ikon dari Stitch AI/Figma, tinggal buka komen ini:
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/
