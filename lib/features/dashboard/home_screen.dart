@@ -232,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
               opacity:
                   0.40, // 💡 Naikkan dari 0.05 ke 0.15 (15%) supaya kelihatan di HP
               child: Image.asset(
-                'assets/images/logo_Welink.png', // 💡 Pastikan persis sama dengan nama file di folder (huruf besar/kecilnya)
+                'assets/images/logo_welink.png', // 💡 Pastikan persis sama dengan nama file di folder (huruf besar/kecilnya)
                 width: 260,
                 height: 260,
                 fit: BoxFit.contain,
