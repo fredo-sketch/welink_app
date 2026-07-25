@@ -203,31 +203,40 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        color: AppColors.deepBlue,
+        // 💡 GANTI BAGIAN INI MENGGUNAKAN GRADIENT
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0A192F), // Warna Biru Malam (sangat gelap) di kiri atas
+              Color(0xFF1E3A8A), // Warna Biru Klasik di kanan bawah
+            ],
+            stops: [
+              0.5,
+              1.5
+            ]),
+        // ----------------------------------------
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
       ),
       child: Stack(
+        clipBehavior: Clip
+            .none, // 💡 Agar gambar di posisi minus (-50, -30) tidak terpotong
         children: [
           Positioned(
-            right: -50,
-            top: -30,
-            child: Transform.rotate(
-              angle: -0.25,
-              child: Opacity(
-                opacity: 0.05,
-                child: Image.asset(
-                  'assets/images/logo_Welink.png',
-                  width: 260,
-                  height: 260,
-                  fit: BoxFit.contain,
-                  color: Colors.white,
-                  colorBlendMode: BlendMode.srcIn,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const SizedBox.shrink(),
-                ),
+            right: -5,
+            top: -15,
+            child: Opacity(
+              opacity:
+                  0.40, // 💡 Naikkan dari 0.05 ke 0.15 (15%) supaya kelihatan di HP
+              child: Image.asset(
+                'assets/images/logo_Welink.png', // 💡 Pastikan persis sama dengan nama file di folder (huruf besar/kecilnya)
+                width: 260,
+                height: 260,
+                fit: BoxFit.contain,
+                // 💡 HAPUS color & colorBlendMode di sini
               ),
             ),
           ),

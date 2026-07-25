@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
+// Import file detail merchant
+import 'merchantDetailScreen.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -13,7 +15,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   final List<String> _categories = ["Semua", "Makanan", "Minuman", "Cemilan"];
 
-  // URL diganti ke Picsum ID yang mendukung CORS penuh di Flutter Web
+  // LIST MERCHANT BESERTA DATA DETAIL
   final List<Map<String, dynamic>> _merchants = [
     {
       "name": "Kopi Kita",
@@ -21,8 +23,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
       "badgeType": "member",
       "distance": "350 m dari lokasi Anda",
       "tags": ["Coffee", "WiFi"],
-      "imageUrl":
-          "https://picsum.photos/id/1060/300/300", // Foto cangkir kopi & cafe
+      "imageUrl": "https://picsum.photos/id/1060/300/300",
+      "description":
+          "Tempat ngopi asik dengan suasana nyaman dan WiFi kencang. Cocok untuk nugas atau WFC.",
+      "statusInfo":
+          "Anda adalah Gold Member. Nikmati diskon 10% di setiap transaksi.",
+      "points": "250 Poin Terkumpul",
     },
     {
       "name": "Bakso Berkah",
@@ -30,8 +36,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
       "badgeType": "progress",
       "distance": "650 m dari lokasi Anda",
       "tags": ["Meatballs", "Local Fav"],
-      "imageUrl":
-          "https://picsum.photos/id/292/300/300", // Foto bahan makanan/dapur
+      "imageUrl": "https://picsum.photos/id/292/300/300",
+      "description":
+          "Bakso sapi asli dengan kuah kaldu gurih. Resep turun temurun sejak 1990.",
+      "statusInfo":
+          "Beli 2 porsi lagi untuk mendapatkan gratis 1 es teh manis.",
+      "points": "Belum ada poin",
     },
     {
       "name": "Warung Nasi Ibu",
@@ -39,8 +49,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
       "badgeType": "guest",
       "distance": "800 m dari lokasi Anda",
       "tags": ["Indonesian", "Murah"],
-      "imageUrl":
-          "https://picsum.photos/id/493/300/300", // Foto makanan di meja makan
+      "imageUrl": "https://picsum.photos/id/493/300/300",
+      "description":
+          "Berbagai macam lauk pauk rumahan dengan harga bersahabat khas Semarang.",
+      "statusInfo":
+          "Daftar member sekarang untuk mulai mengumpulkan poin dan cashback.",
+      "points": "Belum daftar member",
     },
     {
       "name": "Toko Kelontong Jaya",
@@ -48,8 +62,63 @@ class _ExploreScreenState extends State<ExploreScreen> {
       "badgeType": "guest",
       "distance": "1.2 km dari lokasi Anda",
       "tags": ["Groceries", "24 Jam"],
-      "imageUrl":
-          "https://picsum.photos/id/1070/300/300", // Foto suasana market/toko
+      "imageUrl": "https://picsum.photos/id/1070/300/300",
+      "description":
+          "Menyediakan segala kebutuhan sehari-hari lengkap dan buka 24 jam.",
+      "statusInfo":
+          "Scan QR saat berbelanja untuk menjadi member secara otomatis.",
+      "points": "Belum daftar member",
+    },
+    {
+      "name": "Ayam Geprek Mercon",
+      "badge": "MEMBER",
+      "badgeType": "member",
+      "distance": "1.5 km dari lokasi Anda",
+      "tags": ["Spicy", "Chicken"],
+      "imageUrl": "https://picsum.photos/id/225/300/300",
+      "description":
+          "Ayam geprek dengan tingkat kepedasan yang bisa disesuaikan. Berani coba level 5?",
+      "statusInfo":
+          "Silver Member. Anda berhak mendapatkan gratis ekstra sambal.",
+      "points": "120 Poin Terkumpul",
+    },
+    {
+      "name": "Cafe Senja Gunungpati",
+      "badge": "Progress 4/5",
+      "badgeType": "progress",
+      "distance": "2.1 km dari lokasi Anda",
+      "tags": ["Cafe", "Aesthetic"],
+      "imageUrl": "https://picsum.photos/id/43/300/300",
+      "description":
+          "Nikmati senja dengan secangkir teh artisan dan pastry hangat.",
+      "statusInfo": "1 Transaksi lagi untuk naik level menjadi VIP Member!",
+      "points": "95 Poin Terkumpul",
+    },
+    {
+      "name": "Soto Bangkong Asli",
+      "badge": "MEMBER",
+      "badgeType": "member",
+      "distance": "3.5 km dari lokasi Anda",
+      "tags": ["Legend", "Soup"],
+      "imageUrl": "https://picsum.photos/id/429/300/300",
+      "description":
+          "Soto khas Semarang legendaris dengan kuah bening yang menyegarkan.",
+      "statusInfo":
+          "Platinum Member. Nikmati antrean khusus dan gratis sate kerang.",
+      "points": "850 Poin Terkumpul",
+    },
+    {
+      "name": "Sweet Tooth Bakery",
+      "badge": "Guest",
+      "badgeType": "guest",
+      "distance": "4.0 km dari lokasi Anda",
+      "tags": ["Dessert", "Bread"],
+      "imageUrl": "https://picsum.photos/id/312/300/300",
+      "description":
+          "Roti dan kue segar dipanggang setiap pagi. Menerima pesanan kue ulang tahun.",
+      "statusInfo":
+          "Dapatkan diskon 20% untuk pembelian pertama dengan mendaftar member.",
+      "points": "Belum daftar member",
     },
   ];
 
@@ -62,9 +131,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       backgroundColor: const Color(0xfff8fafc),
       body: Column(
         children: [
-          // ==========================================
           // HEADER SECTION
-          // ==========================================
           Container(
             color: Colors.white,
             padding: EdgeInsets.only(top: safeTopPadding, bottom: 16),
@@ -155,7 +222,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           ),
 
-          // Filter Bar
+          // FILTER BAR
           Container(
             color: const Color(0xfff8fafc),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -173,9 +240,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           ),
 
-          // ==========================================
           // MERCHANT LIST SECTION
-          // ==========================================
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -194,7 +259,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -206,111 +270,137 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       )
                     ],
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // KIRI: SEKARANG MEMAKAI NETWORK IMAGE BER-CORS OPEN
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          width: 85,
-                          height: 85,
-                          color: const Color(0xffeef2f7),
-                          child: imageUrl.isNotEmpty
-                              ? Image.network(
-                                  imageUrl,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return const Center(
-                                      child: SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: AppColors.deepBlue,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(Icons.storefront_rounded,
-                                          color: AppColors.deepBlue, size: 32),
-                                )
-                              : const Icon(Icons.storefront_rounded,
-                                  color: AppColors.deepBlue, size: 32),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-
-                      // KANAN: Detail Info
-                      Expanded(
-                        child: Column(
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () {
+                        // Navigasi ke MerchantDetailScreen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MerchantDetailScreen(merchantData: merchant),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    name,
-                                    style: const TextStyle(
-                                      color: AppColors.deepBlue,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                _buildBadge(badge, badgeType),
-                              ],
+                            // KIRI: GAMBAR MERCHANT
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                width: 85,
+                                height: 85,
+                                color: const Color(0xffeef2f7),
+                                child: imageUrl.isNotEmpty
+                                    ? Image.network(
+                                        imageUrl,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return const Center(
+                                            child: SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: AppColors.deepBlue,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        errorBuilder: (context, error,
+                                                stackTrace) =>
+                                            const Icon(Icons.storefront_rounded,
+                                                color: AppColors.deepBlue,
+                                                size: 32),
+                                      )
+                                    : const Icon(Icons.storefront_rounded,
+                                        color: AppColors.deepBlue, size: 32),
+                              ),
                             ),
-                            const SizedBox(height: 6),
-                            Row(
-                              children: [
-                                Icon(Icons.navigation_rounded,
-                                    color: Colors.black.withOpacity(0.3),
-                                    size: 12),
-                                const SizedBox(width: 4),
-                                Text(
-                                  distance,
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.4),
-                                    fontSize: 12,
+                            const SizedBox(width: 14),
+
+                            // KANAN: DETAIL INFO
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          name,
+                                          style: const TextStyle(
+                                            color: AppColors.deepBlue,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      _buildBadge(badge, badgeType),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: tags.map((tag) {
-                                return Container(
-                                  margin: const EdgeInsets.only(right: 6),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xffeef4fa),
-                                    borderRadius: BorderRadius.circular(6),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.navigation_rounded,
+                                          color: Colors.black.withOpacity(0.3),
+                                          size: 12),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        distance,
+                                        style: TextStyle(
+                                          color: Colors.black.withOpacity(0.4),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  child: Text(
-                                    tag.toString(),
-                                    style: const TextStyle(
-                                      color: Color(0xff4a709c),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: tags.map((tag) {
+                                      return Container(
+                                        margin: const EdgeInsets.only(right: 6),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xffeef4fa),
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                        ),
+                                        child: Text(
+                                          tag.toString(),
+                                          style: const TextStyle(
+                                            color: Color(0xff4a709c),
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
-                                );
-                              }).toList(),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 );
               },
@@ -322,6 +412,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
+  // HELPER METHODS
   Widget _buildFilterTag(String text, {bool hasDropdown = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

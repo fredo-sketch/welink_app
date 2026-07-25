@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart'; // Import package QR Generator
 import '../../core/constants/colors.dart';
 
 class CustomerQrScreen extends StatefulWidget {
@@ -44,22 +45,22 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 1. UBAH BACKGROUND UTAMA JADI ABU-ABU (Biar terpisah kontras dengan navbar bawah)
       backgroundColor: const Color(0xfff5f7fb),
       appBar: AppBar(
-        backgroundColor: AppColors.deepBlue, // Header atas tetap biru premium
+        backgroundColor: AppColors.deepBlue,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text("Loyalty QR Code",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text(
+          "Loyalty QR Code",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: Stack(
         children: [
-          // 2. AKSEN BANNER BIRU MELENGKUNG DI ATAS (Mengikuti bahasa visual Home Screen)
           Container(
             height: 140,
             width: double.infinity,
@@ -71,26 +72,23 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
               ),
             ),
           ),
-
-          // 3. KONTEN DI CANGKONG DENGAN SCROLLVIEW (Biar fleksibel di layar kecil + navbar bawah)
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-
-                  // Teks petunjuk (Tetap putih karena posisinya menggantung di area atas)
                   const Text(
                     "Tunjukkan QR Code ini kepada kasir",
                     style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500),
+                      color: Colors.white70,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   const SizedBox(height: 28),
 
-                  // KARTU MEMBER UTAMA (Diberi bayangan tipis agar terlihat melayang premium)
+                  // KARTU MEMBER UTAMA
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -98,9 +96,10 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10))
+                          color: Colors.black.withOpacity(0.06),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        )
                       ],
                     ),
                     child: Column(
@@ -116,10 +115,23 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
                           ),
                           child: Stack(
                             children: [
-                              // Lapisan 1: QR Code Utama
-                              const Center(
-                                child: Icon(Icons.qr_code_2,
-                                    size: 210, color: AppColors.deepBlue),
+                              // Lapisan 1: GENERATOR QR CODE ASLI
+                              Center(
+                                child: QrImageView(
+                                  data:
+                                      _customerId, // Data teks yang di-encode ke QR
+                                  version: QrVersions.auto,
+                                  size: 200.0,
+                                  backgroundColor: Colors.transparent,
+                                  eyeStyle: const QrEyeStyle(
+                                    eyeShape: QrEyeShape.square,
+                                    color: AppColors.deepBlue,
+                                  ),
+                                  dataModuleStyle: const QrDataModuleStyle(
+                                    dataModuleShape: QrDataModuleShape.square,
+                                    color: AppColors.deepBlue,
+                                  ),
+                                ),
                               ),
 
                               // Lapisan 2: Efek Garis Laser Scanner
@@ -156,19 +168,20 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
                         // PEMBATAS GARIS PUTUS-PUTUS AESTHETIC
                         Row(
                           children: List.generate(
-                              15,
-                              (index) => Expanded(
-                                    child: Container(
-                                      color: index % 2 == 0
-                                          ? Colors.transparent
-                                          : Colors.grey.shade300,
-                                      height: 2,
-                                    ),
-                                  )),
+                            15,
+                            (index) => Expanded(
+                              child: Container(
+                                color: index % 2 == 0
+                                    ? Colors.transparent
+                                    : Colors.grey.shade300,
+                                height: 2,
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 18),
 
-                        // DETAIL DATA UNIK CUSTOMER DI BAWAH QR
+                        // DETAIL DATA UNIK CUSTOMER
                         Text(
                           _customerName,
                           style: const TextStyle(
@@ -193,7 +206,6 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
                   ),
                   const SizedBox(height: 32),
 
-                  // INFORMASI BENEFIT (Teks diganti warna DeepBlue agar terbaca jelas di atas warna abu-abu)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -203,14 +215,13 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
                       const Text(
                         "Otomatis kumpulkan poin",
                         style: TextStyle(
-                            color: AppColors.deepBlue,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold),
+                          color: AppColors.deepBlue,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-
-                  // 4. JARAK AMAN (PENTING!) Biar konten gak ke-semprit atau tenggelam di balik tinggi bottom navbar kamu
                   const SizedBox(height: 130),
                 ],
               ),
