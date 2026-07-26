@@ -17,7 +17,7 @@ class _RewardScreenState extends State<RewardScreen> {
   int _userPoints = 2350;
   Timer? _countdownTimer;
 
-  // 1. DATA ITEM TUKAR POIN (Inline expansion + Timer)
+  // 1. DATA ITEM TUKAR POIN
   final List<Map<String, dynamic>> _redeemItems = [
     {
       "id": "R01",
@@ -65,7 +65,7 @@ class _RewardScreenState extends State<RewardScreen> {
     },
   ];
 
-  // 2. DATA VOUCHER SAYA (Terpisah & Independen - 4 Item)
+  // 2. DATA VOUCHER SAYA
   final List<Map<String, dynamic>> _myVouchers = [
     {
       "id": "V01",
@@ -110,7 +110,6 @@ class _RewardScreenState extends State<RewardScreen> {
     super.initState();
     _selectedTab = widget.initialTab;
 
-    // Timer per 1 detik untuk mengupdate tampilan timer mundur real-time
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {});
@@ -124,14 +123,12 @@ class _RewardScreenState extends State<RewardScreen> {
     super.dispose();
   }
 
-  // Helper untuk generate kode unik
   String _generateUniqueCode() {
     final random = Random();
     final number = 100000 + random.nextInt(899999);
     return "WLK-$number";
   }
 
-  // Helper format jam:menit:detik (HH:mm:ss)
   String _formatDuration(Duration duration) {
     if (duration.isNegative) return "Expired";
     String hours = duration.inHours.toString().padLeft(2, '0');
@@ -143,19 +140,19 @@ class _RewardScreenState extends State<RewardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B192C),
+      backgroundColor: Colors.grey.shade50, // Ubah ke terang
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0B192C),
+        backgroundColor: Colors.white, // Ubah ke terang
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Colors.white, size: 20),
+              color: Color(0xFF0B192C), size: 20), // Ikon jadi gelap
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Reward & Member",
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xFF0B192C), // Teks judul jadi gelap
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -164,7 +161,7 @@ class _RewardScreenState extends State<RewardScreen> {
       ),
       body: Column(
         children: [
-          // TIER & BALANCE HEADER CARD
+          // TIER & BALANCE HEADER CARD (Tetap dipertahankan gelap agar kontras)
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             padding: const EdgeInsets.all(20),
@@ -175,8 +172,13 @@ class _RewardScreenState extends State<RewardScreen> {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: const Color(0xFFFFD700).withOpacity(0.3), width: 1.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                )
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,13 +223,13 @@ class _RewardScreenState extends State<RewardScreen> {
 
           const SizedBox(height: 8),
 
-          // TOGGLE BUTTONS TAB
+          // TOGGLE BUTTONS TAB (Versi Terang)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E3E62).withOpacity(0.5),
+                color: Colors.grey.shade200, // Background tab terang
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Row(
@@ -250,7 +252,8 @@ class _RewardScreenState extends State<RewardScreen> {
                           style: TextStyle(
                             color: _selectedTab == 0
                                 ? Colors.black
-                                : Colors.white70,
+                                : Colors
+                                    .grey.shade600, // Teks tidak aktif abu-abu
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),
@@ -276,7 +279,7 @@ class _RewardScreenState extends State<RewardScreen> {
                           style: TextStyle(
                             color: _selectedTab == 1
                                 ? Colors.black
-                                : Colors.white70,
+                                : Colors.grey.shade600,
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
                           ),
@@ -310,7 +313,7 @@ class _RewardScreenState extends State<RewardScreen> {
         const Text(
           "Rekomendasi Voucher Terdekat",
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xFF0B192C), // Teks utama jadi gelap
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
@@ -325,7 +328,6 @@ class _RewardScreenState extends State<RewardScreen> {
     final bool isRedeemed = item["isRedeemed"] ?? false;
     final bool canRedeem = _userPoints >= (item["points"] as int);
 
-    // Hitung sisa waktu mundur 24 jam secara real-time
     Duration remaining = Duration.zero;
     if (isRedeemed && item["expiresAt"] != null) {
       remaining = (item["expiresAt"] as DateTime).difference(DateTime.now());
@@ -335,14 +337,19 @@ class _RewardScreenState extends State<RewardScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E3E62),
+        color: Colors.white, // Kartu warna putih
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isRedeemed
-              ? const Color(0xFFFFC107).withOpacity(0.5)
-              : Colors.white.withOpacity(0.08),
+          color: isRedeemed ? const Color(0xFFFFC107) : Colors.grey.shade200,
           width: isRedeemed ? 1.5 : 1.0,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04), // Bayangan tipis
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,8 +366,8 @@ class _RewardScreenState extends State<RewardScreen> {
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: 60,
                     height: 60,
-                    color: Colors.grey.shade700,
-                    child: const Icon(Icons.store, color: Colors.white),
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.store, color: Colors.grey),
                   ),
                 ),
               ),
@@ -374,7 +381,7 @@ class _RewardScreenState extends State<RewardScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF0B192C), // Judul gelap
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
@@ -383,7 +390,7 @@ class _RewardScreenState extends State<RewardScreen> {
                     Text(
                       item["merchant"],
                       style: TextStyle(
-                        color: Colors.grey.shade400,
+                        color: Colors.grey.shade600, // Subtitle abu-abu
                         fontSize: 11,
                       ),
                     ),
@@ -398,7 +405,7 @@ class _RewardScreenState extends State<RewardScreen> {
                       child: Text(
                         "${item["points"]} Poin",
                         style: const TextStyle(
-                          color: Color(0xFFFFC107),
+                          color: Color(0xFFD49A00), // Poin warna emas gelap
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                         ),
@@ -414,9 +421,10 @@ class _RewardScreenState extends State<RewardScreen> {
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isRedeemed
-                      ? Colors.grey.shade700
+                      ? Colors.grey
+                          .shade300 // Warna dinonaktifkan jadi abu-abu muda
                       : const Color(0xFFFFC107),
-                  disabledBackgroundColor: Colors.grey.shade800,
+                  disabledBackgroundColor: Colors.grey.shade200,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -427,7 +435,7 @@ class _RewardScreenState extends State<RewardScreen> {
                 child: Text(
                   isRedeemed ? "Ditukar" : "Tukar",
                   style: TextStyle(
-                    color: isRedeemed ? Colors.white38 : Colors.black,
+                    color: isRedeemed ? Colors.grey.shade500 : Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
                   ),
@@ -439,15 +447,15 @@ class _RewardScreenState extends State<RewardScreen> {
           // TAMPILAN TAMBAHAN (DI BAWAH CARD ITEM YANG DITUKAR)
           if (isRedeemed) ...[
             const SizedBox(height: 12),
-            Divider(color: Colors.white.withOpacity(0.12), height: 1),
+            Divider(color: Colors.grey.shade200, height: 1), // Divider terang
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF0B192C),
+                color: Colors.grey.shade50, // Area unik terang
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFFFFC107).withOpacity(0.4),
+                  color: const Color(0xFFFFC107).withOpacity(0.5),
                 ),
               ),
               child: Row(
@@ -456,10 +464,10 @@ class _RewardScreenState extends State<RewardScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "KODE UNIK VOUCHER",
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.grey.shade600,
                           fontSize: 9,
                           letterSpacing: 1,
                           fontWeight: FontWeight.bold,
@@ -469,7 +477,7 @@ class _RewardScreenState extends State<RewardScreen> {
                       SelectableText(
                         item["code"] ?? "",
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFF0B192C), // Teks kode gelap
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 2,
@@ -481,10 +489,10 @@ class _RewardScreenState extends State<RewardScreen> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.redAccent.withOpacity(0.15),
+                      color: Colors.redAccent.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                       border:
-                          Border.all(color: Colors.redAccent.withOpacity(0.4)),
+                          Border.all(color: Colors.redAccent.withOpacity(0.3)),
                     ),
                     child: Row(
                       children: [
@@ -516,18 +524,19 @@ class _RewardScreenState extends State<RewardScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E3E62),
+        backgroundColor: Colors.white, // Dialog terang
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text("Konfirmasi Tukar Poin",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                color: Color(0xFF0B192C), fontWeight: FontWeight.bold)),
         content: Text(
           "Tukar ${item['points']} Poin untuk '${item['title']}'?",
-          style: const TextStyle(color: Colors.white70),
+          style: TextStyle(color: Colors.grey.shade700),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Batal", style: TextStyle(color: Colors.grey)),
+            child: Text("Batal", style: TextStyle(color: Colors.grey.shade600)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -561,7 +570,6 @@ class _RewardScreenState extends State<RewardScreen> {
     );
   }
 
-  // DIALOG POP-UP DENGAN TOMBOL "Okay"
   void _showUniqueCodeModal({
     required String title,
     required String merchant,
@@ -571,7 +579,7 @@ class _RewardScreenState extends State<RewardScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Dialog(
-        backgroundColor: const Color(0xFF1E3E62),
+        backgroundColor: Colors.white, // Modal terang
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -591,7 +599,7 @@ class _RewardScreenState extends State<RewardScreen> {
               const Text(
                 "Penukaran Berhasil!",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color(0xFF0B192C), // Teks sukses gelap
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -601,14 +609,14 @@ class _RewardScreenState extends State<RewardScreen> {
                 title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: Color(0xFFFFC107),
+                  color: Color(0xFFD49A00),
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
               ),
               Text(
                 merchant,
-                style: TextStyle(color: Colors.grey.shade400, fontSize: 11),
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
               ),
               const SizedBox(height: 18),
               Container(
@@ -616,7 +624,7 @@ class _RewardScreenState extends State<RewardScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0B192C),
+                  color: Colors.grey.shade50, // Area unik terang
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                       color: const Color(0xFFFFC107).withOpacity(0.8),
@@ -624,10 +632,10 @@ class _RewardScreenState extends State<RewardScreen> {
                 ),
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       "KODE VOUCHER KASIR",
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.grey.shade600,
                         fontSize: 10,
                         letterSpacing: 1.2,
                         fontWeight: FontWeight.w600,
@@ -637,7 +645,7 @@ class _RewardScreenState extends State<RewardScreen> {
                     SelectableText(
                       code,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF0B192C), // Kode voucher gelap
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 3,
@@ -647,7 +655,7 @@ class _RewardScreenState extends State<RewardScreen> {
                     Text(
                       "Tunjukkan kode ini kepada kasir merchant",
                       style:
-                          TextStyle(color: Colors.grey.shade400, fontSize: 10),
+                          TextStyle(color: Colors.grey.shade600, fontSize: 10),
                     ),
                   ],
                 ),
@@ -657,9 +665,9 @@ class _RewardScreenState extends State<RewardScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.redAccent.withOpacity(0.15),
+                  color: Colors.redAccent.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.redAccent.withOpacity(0.4)),
+                  border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
@@ -690,7 +698,7 @@ class _RewardScreenState extends State<RewardScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     elevation: 0,
                   ),
-                  onPressed: () => Navigator.pop(context), // Cukup Tutup Modal
+                  onPressed: () => Navigator.pop(context),
                   child: const Text(
                     "Okay",
                     style: TextStyle(
@@ -716,7 +724,7 @@ class _RewardScreenState extends State<RewardScreen> {
         Text(
           "Voucher Aktif Anda (${_myVouchers.length} Tersedia)",
           style: const TextStyle(
-            color: Colors.white,
+            color: Color(0xFF0B192C), // Judul gelap
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
@@ -736,11 +744,12 @@ class _RewardScreenState extends State<RewardScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withOpacity(0.04), // Bayangan ditipiskan
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
         ],
+        border: Border.all(color: Colors.grey.shade200), // Tambah border tipis
       ),
       child: Row(
         children: [
@@ -756,7 +765,7 @@ class _RewardScreenState extends State<RewardScreen> {
                 height: 52,
                 color: Colors.grey.shade200,
                 child: const Icon(Icons.confirmation_number_rounded,
-                    color: Color(0xFF0B192C)),
+                    color: Colors.grey),
               ),
             ),
           ),
@@ -780,7 +789,7 @@ class _RewardScreenState extends State<RewardScreen> {
                   voucher["merchant"],
                   style: TextStyle(
                     fontSize: 11,
-                    color: Colors.grey.shade700,
+                    color: Colors.grey.shade600, // Warna lebih soft
                     fontWeight: FontWeight.w500,
                   ),
                 ),
