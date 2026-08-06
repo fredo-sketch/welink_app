@@ -1,13 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../core/constants/colors.dart'; // Pastikan path ini sesuai
-import '../profile/birthday_treat_screen.dart';
-import '../profile/transaction_history_screen.dart';
-import '../profile/invite_friends_screen.dart';
-import '../profile/promo_center_screen.dart';
-import '../reward/reward_screen.dart';
-import '../home/active_membership_screen.dart';
-import '../home/streak_screen.dart';
+import '../../core/constants/colors.dart';
+import '../widgets/promo_carousel_banner.dart';
+import '../widgets/home_stats_card.dart';
+import '../widgets/home_menu_item.dart';
+import 'member_card_screen.dart'; // Jangan lupa import halaman kartunya
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "bgColor": Colors.amber.shade100,
       "iconColor": Colors.amber.shade800,
       "title": "Birthday Treat",
-      "subtitle": "Celebrate with exclusive gifts",
+      "subtitle": "Rayakan dengan hadiah eksklusif",
       "tag": "Hadiah",
     },
     {
@@ -36,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "bgColor": Colors.blue.shade100,
       "iconColor": Colors.blue.shade800,
       "title": "Transaction History",
-      "subtitle": "Review your past activities",
+      "subtitle": "Lihat riwayat aktivatismu",
       "tag": "Transaksi",
     },
     {
@@ -44,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "bgColor": const Color(0xffe8e7fd),
       "iconColor": Colors.indigo.shade800,
       "title": "Invite Friends",
-      "subtitle": "Earn points for every referral",
+      "subtitle": "Dapatkan poin dari setiap undangan",
       "tag": "Referral"
     },
     {
@@ -52,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "bgColor": Colors.amber.shade100,
       "iconColor": Colors.amber.shade900,
       "title": "Promo Center",
-      "subtitle": "All your vouchers in one place",
+      "subtitle": "Semua vouchermu dalam satu tempat",
       "tag": "Promo"
     },
   ];
@@ -99,92 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               _buildHeader(safeTopPadding),
               if (_isSearchFocused)
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _searchQuery.isEmpty
-                                ? "Pencarian Cepat Menu"
-                                : "Hasil Pencarian Menumu",
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              _searchController.clear();
-                              _searchFocusNode.unfocus();
-                              setState(() {
-                                _searchQuery = "";
-                              });
-                            },
-                            child: const Text("Batal",
-                                style: TextStyle(color: Colors.red)),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      if (_searchQuery.isEmpty)
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: _allMenus.map((menu) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: ActionChip(
-                                  avatar: Icon(menu["icon"],
-                                      color: menu["iconColor"], size: 16),
-                                  backgroundColor: Colors.white,
-                                  side: BorderSide(
-                                      color: Colors.black.withOpacity(0.05)),
-                                  label: Text(menu["tag"]),
-                                  onPressed: () {
-                                    setState(() {
-                                      _searchController.text = menu["title"];
-                                      _searchQuery = menu["title"];
-                                    });
-                                  },
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      const SizedBox(height: 16),
-                      filteredMenus.isEmpty
-                          ? const Center(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 32.0),
-                                child: Text("Menu tidak ditemukan... 😢",
-                                    style: TextStyle(color: Colors.grey)),
-                              ),
-                            )
-                          : Column(
-                              children: filteredMenus.map((menu) {
-                                return _buildMenuItem(
-                                  context,
-                                  menu["icon"],
-                                  menu["bgColor"],
-                                  menu["iconColor"],
-                                  menu["title"],
-                                  menu["subtitle"],
-                                );
-                              }).toList(),
-                            ),
-                    ],
-                  ),
-                )
+                _buildSearchResults(filteredMenus)
               else
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      _buildStatsCard(),
+                      const HomeStatsCard(),
                       const SizedBox(height: 24),
                       const PromoCarouselBanner(),
                       const SizedBox(height: 28),
@@ -203,40 +120,33 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        // 💡 GANTI BAGIAN INI MENGGUNAKAN GRADIENT
         gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0A192F), // Warna Biru Malam (sangat gelap) di kiri atas
-              Color(0xFF1E3A8A), // Warna Biru Klasik di kanan bawah
-            ],
-            stops: [
-              0.5,
-              1.5
-            ]),
-        // ----------------------------------------
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF0A192F),
+            Color(0xFF1E3A8A),
+          ],
+          stops: [0.5, 1.5],
+        ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(32),
           bottomRight: Radius.circular(32),
         ),
       ),
       child: Stack(
-        clipBehavior: Clip
-            .none, // 💡 Agar gambar di posisi minus (-50, -30) tidak terpotong
+        clipBehavior: Clip.none,
         children: [
           Positioned(
             right: -5,
             top: -15,
             child: Opacity(
-              opacity:
-                  0.40, // 💡 Naikkan dari 0.05 ke 0.15 (15%) supaya kelihatan di HP
+              opacity: 0.40,
               child: Image.asset(
-                'assets/images/logo_welink.png', // 💡 Pastikan persis sama dengan nama file di folder (huruf besar/kecilnya)
+                'assets/images/logo_welink.png',
                 width: 260,
                 height: 260,
                 fit: BoxFit.contain,
-                // 💡 HAPUS color & colorBlendMode di sini
               ),
             ),
           ),
@@ -294,36 +204,54 @@ class _HomeScreenState extends State<HomeScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Welcome back,",
-                                style: TextStyle(
-                                    color: Colors.white.withOpacity(0.6),
-                                    fontSize: 13)),
-                            const Text("Yepta Fredo",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              "Welcome Back,",
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.6),
+                                  fontSize: 13),
+                            ),
+                            const Text(
+                              "Yepta Fredo",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ),
                             const SizedBox(height: 4),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: AppColors.accentGold.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                    color: AppColors.accentGold, width: 1),
-                              ),
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.emoji_events,
-                                      color: AppColors.accentGold, size: 12),
-                                  SizedBox(width: 4),
-                                  Text("GOLD MEMBER",
+                            // TOMBOL KARTU MEMBER (YANG SUDAH DIUPDATE)
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MemberCardScreen(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accentGold.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: AppColors.accentGold, width: 1),
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.emoji_events,
+                                        color: AppColors.accentGold, size: 12),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      "GOLD MEMBER",
                                       style: TextStyle(
                                           color: AppColors.accentGold,
                                           fontSize: 10,
-                                          fontWeight: FontWeight.bold)),
-                                ],
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -344,11 +272,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               Icon(Icons.location_on,
                                   color: AppColors.accentGold, size: 14),
                               SizedBox(width: 4),
-                              Text("Semarang",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                "Semarang",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ],
                           ),
                         ),
@@ -368,11 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 TextField(
                   controller: _searchController,
                   focusNode: _searchFocusNode,
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                  },
+                  onChanged: (value) => setState(() => _searchQuery = value),
                   decoration: InputDecoration(
                     hintText: "Search rewards & merchants...",
                     hintStyle: TextStyle(
@@ -384,9 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: const Icon(Icons.clear, color: Colors.white),
                             onPressed: () {
                               _searchController.clear();
-                              setState(() {
-                                _searchQuery = "";
-                              });
+                              setState(() => _searchQuery = "");
                             },
                           )
                         : null,
@@ -394,8 +318,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     fillColor: Colors.white.withOpacity(0.1),
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
                   ),
                   style: const TextStyle(color: Colors.white),
                 ),
@@ -407,165 +332,80 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==========================================
-  // STATS GRID CARD (SUDAH FIXED TEXT WRAP)
-  // ==========================================
-  Widget _buildStatsCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 16,
-              offset: const Offset(0, 8))
-        ],
-      ),
+  Widget _buildSearchResults(List<Map<String, dynamic>> filteredMenus) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IntrinsicHeight(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildStatItem(
-                    icon: Icons.stars_rounded,
-                    iconColor: Colors.amber.shade600,
-                    value: "2,350",
-                    label: "POIN ANDA",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const RewardScreen(initialTab: 0),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Container(width: 1, color: Colors.black.withOpacity(0.05)),
-                Expanded(
-                  child: _buildStatItem(
-                    icon: Icons.confirmation_number_rounded,
-                    iconColor: Colors.blue.shade600,
-                    value: "5",
-                    label: "MEMBERSHIP AKTIF",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ActiveMembershipScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _searchQuery.isEmpty
+                    ? "Pencarian Cepat Menu"
+                    : "Hasil Pencarian Menumu",
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey),
+              ),
+              TextButton(
+                onPressed: () {
+                  _searchController.clear();
+                  _searchFocusNode.unfocus();
+                  setState(() => _searchQuery = "");
+                },
+                child: const Text("Batal", style: TextStyle(color: Colors.red)),
+              )
+            ],
           ),
-          Divider(color: Colors.black.withOpacity(0.05), height: 1),
-          IntrinsicHeight(
-            child: Row(
-              children: [
-                Expanded(
-                  child: _buildStatItem(
-                    icon: Icons.local_activity_rounded,
-                    iconColor: Colors.indigo.shade600,
-                    value: "4",
-                    label: "VOUCHER TERSEDIA",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const RewardScreen(initialTab: 1),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Container(width: 1, color: Colors.black.withOpacity(0.05)),
-                Expanded(
-                  child: _buildStatItem(
-                    icon: Icons.local_fire_department_rounded,
-                    iconColor: Colors.red.shade600,
-                    value: "4",
-                    label: "HARI",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const StreakScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+          const SizedBox(height: 8),
+          if (_searchQuery.isEmpty)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _allMenus.map((menu) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: ActionChip(
+                      avatar: Icon(menu["icon"],
+                          color: menu["iconColor"], size: 16),
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.black.withOpacity(0.05)),
+                      label: Text(menu["tag"]),
+                      onPressed: () {
+                        setState(() {
+                          _searchController.text = menu["title"];
+                          _searchQuery = menu["title"];
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
+          const SizedBox(height: 16),
+          filteredMenus.isEmpty
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32.0),
+                    child: Text("Menu tidak ditemukan...",
+                        style: TextStyle(color: Colors.grey)),
+                  ),
+                )
+              : Column(
+                  children: filteredMenus.map((menu) {
+                    return HomeMenuItem(
+                      icon: menu["icon"],
+                      bgColor: menu["bgColor"],
+                      iconColor: menu["iconColor"],
+                      title: menu["title"],
+                      subtitle: menu["subtitle"],
+                    );
+                  }).toList(),
+                ),
         ],
-      ),
-    );
-  }
-
-  // WIDGET ITEM STATS DENGAN PENCEGAHAN OVERFLOW ICON
-  Widget _buildStatItem({
-    required IconData icon,
-    required Color iconColor,
-    required String value,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: iconColor, size: 22),
-            ),
-            const SizedBox(width: 10),
-            // Expanded memastikan teks membungkus (wrap) jika kepanjangan
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.deepBlue,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    label,
-                    softWrap: true,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 9.5,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600,
-                      height: 1.1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -600,262 +440,16 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 16),
         Column(
           children: _allMenus.map((menu) {
-            return _buildMenuItem(
-              context,
-              menu["icon"],
-              menu["bgColor"],
-              menu["iconColor"],
-              menu["title"],
-              menu["subtitle"],
+            return HomeMenuItem(
+              icon: menu["icon"],
+              bgColor: menu["bgColor"],
+              iconColor: menu["iconColor"],
+              title: menu["title"],
+              subtitle: menu["subtitle"],
             );
           }).toList(),
         ),
         const SizedBox(height: 100),
-      ],
-    );
-  }
-
-  Widget _buildMenuItem(
-    BuildContext context,
-    IconData icon,
-    Color bgColor,
-    Color iconColor,
-    String title,
-    String subtitle,
-  ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
-      ),
-      child: InkWell(
-        onTap: () {
-          Widget destinationScreen;
-          switch (title) {
-            case "Birthday Treat":
-              destinationScreen = const BirthdayTreatScreen();
-              break;
-            case "Transaction History":
-              destinationScreen = const TransactionHistoryScreen();
-              break;
-            case "Invite Friends":
-              destinationScreen = const InviteFriendsScreen();
-              break;
-            case "Promo Center":
-              destinationScreen = const PromoCenterScreen();
-              break;
-            default:
-              return;
-          }
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => destinationScreen),
-          );
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: iconColor, size: 22),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.deepBlue,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black.withOpacity(0.4),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                color: Colors.black.withOpacity(0.3),
-                size: 20,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PromoCarouselBanner extends StatefulWidget {
-  const PromoCarouselBanner({super.key});
-
-  @override
-  State<PromoCarouselBanner> createState() => _PromoCarouselBannerState();
-}
-
-class _PromoCarouselBannerState extends State<PromoCarouselBanner> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  Timer? _timer;
-
-  final List<Map<String, String>> _promoList = [
-    {
-      "title": "Gourmet Haven",
-      "subtitle": "Get 20% cashback on all\norders today.",
-      "image":
-          "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      "title": "Coffee Time",
-      "subtitle": "Buy 1 Get 1 Free for all\nEspresso base items.",
-      "image":
-          "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      "title": "Gadget Fest",
-      "subtitle": "Special tech discount up to\n50% off this weekend.",
-      "image":
-          "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=600&auto=format&fit=crop"
-    },
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
-      if (_currentPage < _promoList.length - 1) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-      if (_pageController.hasClients) {
-        _pageController.animateToPage(_currentPage,
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.easeInOut);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 200,
-          child: PageView.builder(
-            controller: _pageController,
-            onPageChanged: (page) => setState(() => _currentPage = page),
-            itemCount: _promoList.length,
-            itemBuilder: (context, index) {
-              final promo = _promoList[index];
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    image: DecorationImage(
-                        image: NetworkImage(promo["image"]!),
-                        fit: BoxFit.cover)),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            AppColors.deepBlue.withOpacity(0.95),
-                            AppColors.deepBlue.withOpacity(0.3)
-                          ])),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(promo["title"]!,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(promo["subtitle"]!,
-                                  style: TextStyle(
-                                      color: Colors.white.withOpacity(0.8),
-                                      fontSize: 13,
-                                      height: 1.3))),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: AppColors.deepBlue,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 0),
-                                elevation: 0),
-                            child: const Text("Claim Offer",
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-              _promoList.length,
-              (index) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  height: 8,
-                  width: _currentPage == index ? 24 : 8,
-                  decoration: BoxDecoration(
-                      color: _currentPage == index
-                          ? AppColors.deepBlue
-                          : Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(4)))),
-        ),
       ],
     );
   }

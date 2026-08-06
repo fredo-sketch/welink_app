@@ -24,6 +24,7 @@ dependencies:
 
   # HTTP Client buat connect ke NestJS Rafif
   dio: ^5.5.0
+  lottie: ^3.5.1
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +36,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/animations/
 
   # Nanti kalau sudah ada gambar/ikon dari Stitch AI/Figma, tinggal buka komen ini:
   # assets:

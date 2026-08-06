@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
-import 'home_screen.dart'; // 1. Import HomeScreen (satu folder)
-import '../explore/explore_screen.dart'; // 2. Import ExploreScreen yang baru dibuat
-import '../scan/customer_qr_screen.dart'; // 3. Perbaikan nama file scan yang benar
-import '../reward/reward_screen.dart'; // <-- UPDATE: Import RewardScreen milikmu!
-import '../profile/profile_screen.dart'; // 4. Import ProfileScreen yang baru dibuat
+import 'home_screen.dart';
+import '../explore/explore_screen.dart';
+import '../scan/customer_qr_screen.dart';
+import '../reward/reward_screen.dart';
+import '../menu/profile_screen.dart';
 
 class MainDashboardShell extends StatefulWidget {
   const MainDashboardShell({super.key});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart'; // Import package QR Generator
+import 'package:welink_app/features/dashboard/home_screen.dart';
 import '../../core/constants/colors.dart';
 
 class CustomerQrScreen extends StatefulWidget {
@@ -49,10 +50,7 @@ class _CustomerQrScreenState extends State<CustomerQrScreen>
       appBar: AppBar(
         backgroundColor: AppColors.deepBlue,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        automaticallyImplyLeading: false, // Menghilangkan ikon back otomatis
         title: const Text(
           "Loyalty QR Code",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
